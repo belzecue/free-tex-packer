@@ -131,6 +131,7 @@ class PackProperties extends React.Component {
         data.tinify = ReactDOM.findDOMNode(this.refs.tinify).checked;
         data.tinifyKey = ReactDOM.findDOMNode(this.refs.tinifyKey).value;
         data.scale = Number(ReactDOM.findDOMNode(this.refs.scale).value);
+        data.disableSmoothing = ReactDOM.findDOMNode(this.refs.disableSmoothing).checked;
         data.filter = ReactDOM.findDOMNode(this.refs.filter).value;
         data.exporter = ReactDOM.findDOMNode(this.refs.exporter).value;
         data.fileName = ReactDOM.findDOMNode(this.refs.fileName).value;
@@ -161,6 +162,7 @@ class PackProperties extends React.Component {
         ReactDOM.findDOMNode(this.refs.tinify).checked = this.packOptions.tinify;
         ReactDOM.findDOMNode(this.refs.tinifyKey).value = this.packOptions.tinifyKey;
         ReactDOM.findDOMNode(this.refs.scale).value = Number(this.packOptions.scale);
+        ReactDOM.findDOMNode(this.refs.disableSmoothing).checked = this.packOptions.disableSmoothing;
         ReactDOM.findDOMNode(this.refs.filter).value = this.packOptions.filter;
         ReactDOM.findDOMNode(this.refs.exporter).value = this.packOptions.exporter;
         ReactDOM.findDOMNode(this.refs.fileName).value = this.packOptions.fileName;
@@ -258,7 +260,9 @@ class PackProperties extends React.Component {
     render() {
 
         let exporter = getExporterByType(this.packOptions.exporter);
+        let allowRotation = this.packOptions.allowRotation && exporter.allowRotation;
         let exporterRotationDisabled = exporter.allowRotation ? "" : "disabled";
+        let allowTrim = this.packOptions.allowTrim && exporter.allowTrim;
         let exporterTrimDisabled = exporter.allowTrim ? "" : "disabled";
         
         return (
@@ -306,9 +310,14 @@ class PackProperties extends React.Component {
                                 <td><input ref="tinifyKey" type="text" className="border-color-gray" defaultValue={this.packOptions.tinifyKey} onBlur={this.onExporterPropChanged} /></td>
                                 <td></td>
                             </tr>
+                            <tr title={I18.f("DISABLE_SMOOTHING_TITLE")}>
+                                <td>{I18.f("DISABLE_SMOOTHING")}</td>
+                                <td><input ref="disableSmoothing" type="checkbox" className="border-color-gray" onChange={this.onPropChanged} defaultChecked={this.packOptions.disableSmoothing ? "checked" : ""} /></td>
+                                <td></td>
+                            </tr>
                             <tr title={I18.f("SCALE_TITLE")}>
                                 <td>{I18.f("SCALE")}</td>
-                                <td><input ref="scale" type="number" min="1" className="border-color-gray" defaultValue={this.packOptions.scale} onBlur={this.onExporterPropChanged}/></td>
+                                <td><input ref="scale" type="number" min="0" className="border-color-gray" defaultValue={this.packOptions.scale} onBlur={this.onPropChanged}/></td>
                                 <td></td>
                             </tr>
                             <tr title={I18.f("FILTER_TITLE")}>
@@ -385,12 +394,12 @@ class PackProperties extends React.Component {
                             </tr>
                             <tr title={I18.f("ALLOW_ROTATION_TITLE")}>
                                 <td>{I18.f("ALLOW_ROTATION")}</td>
-                                <td><input ref="allowRotation" type="checkbox" className="border-color-gray" onChange={this.onPropChanged} defaultChecked={this.packOptions.allowRotation ? "checked" : ""} disabled={exporterRotationDisabled} /></td>
+                                <td><input ref="allowRotation" type="checkbox" className="border-color-gray" onChange={this.onPropChanged} defaultChecked={allowRotation ? "checked" : ""} disabled={exporterRotationDisabled} /></td>
                                 <td></td>
                             </tr>
                             <tr title={I18.f("ALLOW_TRIM_TITLE")}>
                                 <td>{I18.f("ALLOW_TRIM")}</td>
-                                <td><input ref="allowTrim" type="checkbox" className="border-color-gray" onChange={this.onPropChanged} defaultChecked={this.packOptions.allowTrim ? "checked" : ""}  disabled={exporterTrimDisabled} /></td>
+                                <td><input ref="allowTrim" type="checkbox" className="border-color-gray" onChange={this.onPropChanged} defaultChecked={allowTrim ? "checked" : ""}  disabled={exporterTrimDisabled} /></td>
                                 <td></td>
                             </tr>
                             <tr title={I18.f("TRIM_MODE_TITLE")}>
